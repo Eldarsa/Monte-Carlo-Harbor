@@ -14,7 +14,7 @@ OcclusionCullingSettings:
 RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 9
-  m_Fog: 1
+  m_Fog: 0
   m_FogColor: {r: 0.65080994, g: 0.666729, b: 0.7075472, a: 1}
   m_FogMode: 3
   m_FogDensity: 0.05
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 2138677392}
-  m_IndirectSpecularColor: {r: 0.2850269, g: 0.3713935, b: 0.49601045, a: 1}
+  m_IndirectSpecularColor: {r: 0.015961185, g: 0.020800736, b: 0.027779613, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -172,54 +172,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &986742360
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 986742361}
-  - component: {fileID: 986742362}
-  m_Layer: 0
-  m_Name: MultiverseSpawner
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &986742361
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 986742360}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &986742362
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 986742360}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f60637585bfec7f4cb3200b4133c7bcf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  universePrefab: {fileID: 5565300497151136310, guid: 3c4a755304fc89342b66afd474bdd6bc, type: 3}
-  xGridSize: 5
-  zGridSize: 5
-  spacing: 1
 --- !u!1 &1687258581
 GameObject:
   m_ObjectHideFlags: 0
@@ -495,3 +447,76 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
+--- !u!1001 &1970527082239148660
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1970527082152115244, guid: 424cf72e20e61994b9e6002535cb8a6b, type: 3}
+      propertyPath: m_Name
+      value: MultiverseSpawner
+      objectReference: {fileID: 0}
+    - target: {fileID: 1970527082152115245, guid: 424cf72e20e61994b9e6002535cb8a6b, type: 3}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1970527082152115245, guid: 424cf72e20e61994b9e6002535cb8a6b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1970527082152115245, guid: 424cf72e20e61994b9e6002535cb8a6b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1970527082152115245, guid: 424cf72e20e61994b9e6002535cb8a6b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.04
+      objectReference: {fileID: 0}
+    - target: {fileID: 1970527082152115245, guid: 424cf72e20e61994b9e6002535cb8a6b, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1970527082152115245, guid: 424cf72e20e61994b9e6002535cb8a6b, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1970527082152115245, guid: 424cf72e20e61994b9e6002535cb8a6b, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1970527082152115245, guid: 424cf72e20e61994b9e6002535cb8a6b, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1970527082152115245, guid: 424cf72e20e61994b9e6002535cb8a6b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1970527082152115245, guid: 424cf72e20e61994b9e6002535cb8a6b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1970527082152115245, guid: 424cf72e20e61994b9e6002535cb8a6b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1970527082152115246, guid: 424cf72e20e61994b9e6002535cb8a6b, type: 3}
+      propertyPath: xGridSize
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1970527082152115246, guid: 424cf72e20e61994b9e6002535cb8a6b, type: 3}
+      propertyPath: zGridSize
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1970527082152115246, guid: 424cf72e20e61994b9e6002535cb8a6b, type: 3}
+      propertyPath: universePrefab
+      value: 
+      objectReference: {fileID: 6902067033934463519, guid: bf79af3112e06e248815c95952b22295, type: 3}
+    - target: {fileID: 1970527082152115246, guid: 424cf72e20e61994b9e6002535cb8a6b, type: 3}
+      propertyPath: visibleUniverseCount
+      value: 3
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 424cf72e20e61994b9e6002535cb8a6b, type: 3}
