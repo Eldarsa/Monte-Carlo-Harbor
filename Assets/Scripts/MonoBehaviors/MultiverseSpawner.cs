@@ -49,8 +49,6 @@ public class MultiverseSpawner : MonoBehaviour
         // We have to instantiate the entities through a manager
         var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
 
-
-
         int counter = 0;
         for(int x = 0; x < xGridSize; x++)
         {
@@ -60,15 +58,12 @@ public class MultiverseSpawner : MonoBehaviour
                 if(counter < visibleUniverseCount){
                     instance = entityManager.Instantiate(entity);
                 }else{
-                    //instance = entityManager.Instantiate(invisibleEntity);
                     instance = entityManager.Instantiate(invisibleEntity);
                 }
 
-                //var instance = entityManager.Instantiate(entity);
-
                 float3 position = new float3(x * (_universeWidth + spacing), 0, z * (_universeLength + spacing));
                 entityManager.SetComponentData(instance, new Translation {Value = position});
-                Debug.Log("Position: " + position.ToString());
+                //Debug.Log("Position: " + position.ToString());
 
                 counter++;
             }

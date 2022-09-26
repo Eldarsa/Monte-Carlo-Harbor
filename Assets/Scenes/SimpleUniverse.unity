@@ -20,12 +20,12 @@ RenderSettings:
   m_FogDensity: 0.05
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
-  m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
-  m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
-  m_AmbientIntensity: 1
-  m_AmbientMode: 0
-  m_SubtractiveShadowColor: {r: 0.13296545, g: 0.19145328, b: 0.33962262, a: 1}
+  m_AmbientSkyColor: {r: 0.5188679, g: 0.09777119, b: 0.07587219, a: 1}
+  m_AmbientEquatorColor: {r: 0.11372549, g: 0.13333334, b: 0.12080931, a: 1}
+  m_AmbientGroundColor: {r: 0.14217694, g: 0.37335896, b: 0.4245283, a: 1}
+  m_AmbientIntensity: 0.85
+  m_AmbientMode: 1
+  m_SubtractiveShadowColor: {r: 0.20741367, g: 0.745283, b: 0.7194625, a: 1}
   m_SkyboxMaterial: {fileID: 2100000, guid: 0ffaa0b7117ba8c47a9d05ae701d4b4d, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 2138677392}
-  m_IndirectSpecularColor: {r: 0.015961185, g: 0.020800736, b: 0.027779613, a: 1}
+  m_IndirectSpecularColor: {r: 0.0755933, g: 0.0817459, b: 0.08704221, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -70,7 +70,7 @@ LightmapSettings:
     m_FinalGather: 0
     m_FinalGatherFiltering: 1
     m_FinalGatherRayCount: 256
-    m_ReflectionCompression: 2
+    m_ReflectionCompression: 0
     m_MixedBakeMode: 1
     m_BakeBackend: 1
     m_PVRSampling: 1
@@ -516,7 +516,7 @@ PrefabInstance:
       objectReference: {fileID: 6902067033934463519, guid: bf79af3112e06e248815c95952b22295, type: 3}
     - target: {fileID: 1970527082152115246, guid: 424cf72e20e61994b9e6002535cb8a6b, type: 3}
       propertyPath: visibleUniverseCount
-      value: 3
+      value: 100
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 424cf72e20e61994b9e6002535cb8a6b, type: 3}
