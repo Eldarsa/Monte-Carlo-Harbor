@@ -504,11 +504,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1970527082152115246, guid: 424cf72e20e61994b9e6002535cb8a6b, type: 3}
       propertyPath: xGridSize
-      value: 10
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1970527082152115246, guid: 424cf72e20e61994b9e6002535cb8a6b, type: 3}
       propertyPath: zGridSize
-      value: 10
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1970527082152115246, guid: 424cf72e20e61994b9e6002535cb8a6b, type: 3}
       propertyPath: universePrefab
