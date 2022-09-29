@@ -25,18 +25,30 @@ public partial class WaypointGenerationSystem : SystemBase
         
         Entities
             .WithAll<SpawnWaypointsTag>()
-            .ForEach((Entity e, int entityInQueryIndex, in WaypointGenerationData data, in AreaDefinition area, in Translation translation) => {
+            .ForEach((Entity e, int entityInQueryIndex, in WaypointGenerationData data, in UniverseData universeData, in Translation translation) => {
 
-                var numberOfWaypoints = data.Count;
-                var startPoint = data.StartPoint;
-                var endPoint = data.EndPoint;
-                Debug.Log("Entity: " + entityInQueryIndex.ToString());
-                float3[] waypoints = calculateWaypoints(startPoint, endPoint, numberOfWaypoints);
+                float3[] waypoints = calculateWaypoints(
+                    data.StartPoint, 
+                    data.EndPoint, 
+                    data.Count);
 
-                foreach(float3 point in waypoints){
+                int counter = 0;
+                foreach(float3 wp in waypoints){
                     var newWaypoint = ecb.Instantiate(entityInQueryIndex, data.WaypointPrefab);
-                    var newPos = new Translation { Value = point + translation.Value};
-                    ecb.SetComponent(entityInQueryIndex, newWaypoint, newPos);
+
+                    var wpPos = new Translation { 
+                        Value = wp + translation.Value
+                        };
+
+                    var wpData = new WaypointData { 
+                        UniverseId = universeData.Id, 
+                        WaypointNumber = counter
+                        };
+
+                    ecb.SetComponent(entityInQueryIndex, newWaypoint, wpPos);
+                    ecb.SetComponent(entityInQueryIndex, newWaypoint, wpData);
+
+                    counter++;
                 }
 
                 // We have spawned waypoints now. Remove component..
@@ -44,6 +56,15 @@ public partial class WaypointGenerationSystem : SystemBase
 
         }).WithoutBurst().Run();
         _ecbSystem.AddJobHandleForProducer(this.Dependency);
+
+
+    /*
+        Entities
+            .WithAll<FollowWaypointsTag>()
+            .ForEach() => {
+
+            }
+    */
     }
 
     float3[] calculateWaypoints(float3 startPoint, float3 endPoint, int count){

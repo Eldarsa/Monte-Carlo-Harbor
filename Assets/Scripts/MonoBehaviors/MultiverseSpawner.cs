@@ -63,6 +63,7 @@ public class MultiverseSpawner : MonoBehaviour
 
                 float3 position = new float3(x * (_universeWidth + spacing), 0, z * (_universeLength + spacing));
                 entityManager.SetComponentData(instance, new Translation {Value = position});
+                entityManager.SetComponentData(instance, new UniverseData { Id = counter });
                 //Debug.Log("Position: " + position.ToString());
 
                 counter++;
