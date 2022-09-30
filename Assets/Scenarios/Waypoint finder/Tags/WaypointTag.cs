@@ -1,4 +1,4 @@
 using Unity.Entities;
 
 [GenerateAuthoringComponent]
-public class WaypointTag : IComponentData {}
+public struct WaypointTag : IComponentData {}

@@ -9,6 +9,7 @@ using UnityEngine;
 public partial class WaypointGenerationSystem : SystemBase
 {
 
+        // Setup EntityManager and make an entity instance of our universe prefab
     private EndInitializationEntityCommandBufferSystem _ecbSystem;
 
     protected override void OnStartRunning()
@@ -20,10 +21,36 @@ public partial class WaypointGenerationSystem : SystemBase
     {
         var ecb = _ecbSystem.CreateCommandBuffer().AsParallelWriter();        
         
+        // TODO: Give waypoint buffer so that we can see all the waypoints for this particular manager
+        var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+
+        // Spawn Waypoint managers in every universe with an InitWaypointManagerTag 
+        Entities
+            .WithAll<InitWaypointManagerTag>()
+            .ForEach((Entity e, int entityInQueryIndex, in UniverseId id, in Translation translation) => {
+                
+                var newWaypointManager = ecb.CreateEntity(entityInQueryIndex);
+
+                // Set up the waypoint manager to spawn waypoints
+                ecb.AddComponent<SpawnWaypointsTag>(entityInQueryIndex, newWaypointManager);
+
+                // Pass all the components the waypointManager needs
+                ecb.AddComponent(entityInQueryIndex, newWaypointManager, new UniverseId { Value = id.Value});
+                ecb.AddComponent(entityInQueryIndex, newWaypointManager, new Translation { Value = translation.Value});
+
+                // Pass the waypoint generation data from the parent entity to the new waypoint manager
+                var waypointGenerationData = entityManager.GetComponentData<WaypointGenerationData>(e);
+                ecb.AddComponent(entityInQueryIndex, newWaypointManager, waypointGenerationData);
+
+                // Remove this component to signal that operation is complete
+                ecb.RemoveComponent<InitWaypointManagerTag>(entityInQueryIndex, e);
+
+            }).WithoutBurst().Run();
+
         // Spawn waypoints in each universe
         Entities
             .WithAll<SpawnWaypointsTag>()
-            .ForEach((Entity e, int entityInQueryIndex, in WaypointGenerationData data, in UniverseData universeData, in Translation translation) => {
+            .ForEach((Entity e, int entityInQueryIndex, in WaypointGenerationData data, in UniverseId id, in Translation translation) => {
 
                 float3[] waypoints = calculateWaypoints(
                     data.StartPoint, 
@@ -40,7 +67,7 @@ public partial class WaypointGenerationSystem : SystemBase
 
                     // Give the waypoint some metadata for future reference
                     var wpData = new WaypointData { 
-                        UniverseId = universeData.Id, 
+                        UniverseId = id.Value, 
                         WaypointNumber = counter
                         };
 
@@ -56,7 +83,7 @@ public partial class WaypointGenerationSystem : SystemBase
         }).WithoutBurst().Run();
         _ecbSystem.AddJobHandleForProducer(this.Dependency);
 
-
+        /*
         Entities
             .WithAll<FollowWaypointsTag>()
             //.ForEach((Entity e, int entityInQueryIndex, ref TargetWaypointData tp, ref Destination dest, in UniverseData universeData) => {
@@ -87,6 +114,7 @@ public partial class WaypointGenerationSystem : SystemBase
 
 
         }).WithoutBurst().Run();
+        */
     
         /*
         Entities

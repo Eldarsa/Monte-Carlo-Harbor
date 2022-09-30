@@ -3,4 +3,7 @@ using Unity.Mathematics;
 using UnityEngine;
 
 [GenerateAuthoringComponent]
-public struct FollowWaypointsTag: IComponentData {}
+public struct UniverseId : IComponentData
+{
+    public int Value;
+}

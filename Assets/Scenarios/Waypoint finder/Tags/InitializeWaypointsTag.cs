@@ -3,4 +3,4 @@ using Unity.Mathematics;
 using UnityEngine;
 
 [GenerateAuthoringComponent]
-public struct FollowWaypointsTag: IComponentData {}
+public struct InitWaypointManagerTag: IComponentData {}
