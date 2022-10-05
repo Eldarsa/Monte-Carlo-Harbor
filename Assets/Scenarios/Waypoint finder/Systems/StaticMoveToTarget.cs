@@ -11,6 +11,7 @@ public partial class StaticMoveToTarget : SystemBase
     {
         float deltaTime = Time.DeltaTime;
         
+        /*
         Entities.ForEach((ref Translation translation, in Rotation rotation, in Destination destination, in MovementSpeed speed) => {
             
             float3 toDestination = destination.Value - translation.Value;
@@ -30,5 +31,6 @@ public partial class StaticMoveToTarget : SystemBase
             // translation.Value += movement;
 
         }).ScheduleParallel(); // Spred across multiple different cores
+        */
     }
 }

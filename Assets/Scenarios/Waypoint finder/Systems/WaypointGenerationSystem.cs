@@ -9,17 +9,25 @@ using UnityEngine;
 public partial class WaypointGenerationSystem : SystemBase
 {
 
-        // Setup EntityManager and make an entity instance of our universe prefab
+    // Setup EntityManager and make an entity instance of our universe prefab
     private EndInitializationEntityCommandBufferSystem _ecbSystem;
+
+    public NativeParallelHashMap<int, Entity> WaypointManagerMap;
 
     protected override void OnStartRunning()
     {
         _ecbSystem = World.GetOrCreateSystem<EndInitializationEntityCommandBufferSystem>();
+
+        // Has to be constructed in special way https://forum.unity.com/threads/solved-nativecontainer-result-has-not-been-assigned-or-constructed-but-i-did.545483/
+        WaypointManagerMap = new NativeParallelHashMap<int, Entity>(100000, Allocator.Persistent); // TODO: Use the number of universes as capacity
+
     }
 
     protected override void OnUpdate()
     {
-        var ecb = _ecbSystem.CreateCommandBuffer().AsParallelWriter();        
+        var ecb = _ecbSystem.CreateCommandBuffer().AsParallelWriter();       
+
+        var wpm = WaypointManagerMap.AsParallelWriter(); 
         
         // TODO: Give waypoint buffer so that we can see all the waypoints for this particular manager
         var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
@@ -29,7 +37,9 @@ public partial class WaypointGenerationSystem : SystemBase
             .WithAll<InitWaypointManagerTag>()
             .ForEach((Entity e, int entityInQueryIndex, in UniverseId id, in Translation translation) => {
                 
-                var newWaypointManager = ecb.CreateEntity(entityInQueryIndex);
+                // The Entity here will be a Universe
+
+                Entity newWaypointManager = ecb.CreateEntity(entityInQueryIndex);
 
                 // Set up the waypoint manager to spawn waypoints
                 ecb.AddComponent<SpawnWaypointsTag>(entityInQueryIndex, newWaypointManager);
@@ -38,19 +48,34 @@ public partial class WaypointGenerationSystem : SystemBase
                 ecb.AddComponent(entityInQueryIndex, newWaypointManager, new UniverseId { Value = id.Value});
                 ecb.AddComponent(entityInQueryIndex, newWaypointManager, new Translation { Value = translation.Value});
 
+                // Add a dynamic buffer to store waypoints in such that the boat can find them
+                ecb.AddBuffer<WaypointBufferElement>(entityInQueryIndex, newWaypointManager);
+
                 // Pass the waypoint generation data from the parent entity to the new waypoint manager
                 var waypointGenerationData = entityManager.GetComponentData<WaypointGenerationData>(e);
                 ecb.AddComponent(entityInQueryIndex, newWaypointManager, waypointGenerationData);
 
+                // Add it to a hashmap
+                wpm.TryAdd(id.Value, newWaypointManager);
+                //WaypointManagerMap.Add(id.Value, newWaypointManager);
+
                 // Remove this component to signal that operation is complete
                 ecb.RemoveComponent<InitWaypointManagerTag>(entityInQueryIndex, e);
 
-            }).WithoutBurst().Run();
+            }).Schedule(); //.WithoutBurst().Run(); //.Schedule(); //WithoutBurst().Run();
 
         // Spawn waypoints in each universe
+        /* We need to find a way for the waypoint following entities to find their own waypoint manager 
+         * One option could be to make a buffer that has all the waypoint managers, but it would have to have
+         * as much memory allocation as there are universes. Maybe a better way is to somehow loop throgh all the 
+         * waypoint managers and try to store a reference to the correct one for each waypoint finding entity. 
+         * This is more difficult now that we can't do nested ForEach loops.
+        */
         Entities
             .WithAll<SpawnWaypointsTag>()
             .ForEach((Entity e, int entityInQueryIndex, in WaypointGenerationData data, in UniverseId id, in Translation translation) => {
+
+                // The Entity here will be a WaypointManager
 
                 float3[] waypoints = calculateWaypoints(
                     data.StartPoint, 
@@ -74,7 +99,12 @@ public partial class WaypointGenerationSystem : SystemBase
                     ecb.SetComponent(entityInQueryIndex, newWaypoint, wpPos);
                     ecb.SetComponent(entityInQueryIndex, newWaypoint, wpData);
 
+                    // Add a reference to the waypoint in the WaypointManagers waypoint buffer
+                    var wpBufferElement = new WaypointBufferElement() { Waypoint = newWaypoint };
+                    entityManager.GetBuffer<WaypointBufferElement>(e, false).Add(wpBufferElement);
+
                     counter++;
+
                 }
 
                 // We have spawned waypoints now. Remove component..
@@ -82,71 +112,6 @@ public partial class WaypointGenerationSystem : SystemBase
 
         }).WithoutBurst().Run();
         _ecbSystem.AddJobHandleForProducer(this.Dependency);
-
-        /*
-        Entities
-            .WithAll<FollowWaypointsTag>()
-            //.ForEach((Entity e, int entityInQueryIndex, ref TargetWaypointData tp, ref Destination dest, in UniverseData universeData) => {
-            .ForEach((Entity e, int entityInQueryIndex, ref Destination dest, in UniverseData universeData, in TargetWaypointData tp ) => {
-
-                // Maybe keep a reference to a waypoint manager that is in the same universe
-
-                if(tp.WaypointSet == false){
-
-                    int thisUniverseId = universeData.Id;
-                    int currentWaypointId = tp.WaypointNumber;
-                    int nextWaypointId = currentWaypointId + 1;
-
-                    float3 nextDestination = new float3(0,0,0);
-                    bool setNextDestination = false;
-
-                    if(setNextDestination){
-                        dest.Value = nextDestination;
-                    }
-
-                    //tp.WaypointSet = true;
-
-                }
-
-                // WE ARE ONLY SETTING ONE WAYPOINT HERE
-
-                // TODO: Improve this whole logic !!
-
-
-        }).WithoutBurst().Run();
-        */
-    
-        /*
-        Entities
-            .WithAll<FollowingWaypointsTag>()
-            .ForEach((Entity e, int entityInQueryIndex, ref TargetWaypointData tp, ref Destination dest, in UniverseData universeData) => {
-
-                
-
-                if(tp.WaypointSet == false){
-
-                    int thisUniverseId = universeData.Id;
-                    int currentWaypointId = tp.WaypointNumber;
-                    int nextWaypointId = currentWaypointId + 1;
-
-                    float3 nextDestination = new float3(0,0,0);
-                    bool setNextDestination = false;
-
-                    if(setNextDestination){
-                        dest.Value = nextDestination;
-                    }
-
-                    tp.WaypointSet = true;
-
-                }
-
-                // WE ARE ONLY SETTING ONE WAYPOINT HERE
-
-                // TODO: Improve this whole logic !!
-
-
-        }).WithoutBurst().Run();
-        */
     
 
     }

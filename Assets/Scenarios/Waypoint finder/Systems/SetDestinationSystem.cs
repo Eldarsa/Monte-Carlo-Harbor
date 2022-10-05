@@ -24,6 +24,7 @@ public partial class SetDestinationSystem : SystemBase
 
         var randomArray = randomSystem.RandomArray;
         
+        /*
         Entities
             .WithNativeDisableParallelForRestriction(randomArray)
             .ForEach((int nativeThreadIndex, ref Destination destination, in Translation translation) => 
@@ -41,5 +42,6 @@ public partial class SetDestinationSystem : SystemBase
             }
 
         }).ScheduleParallel();
+        */
     }
 }

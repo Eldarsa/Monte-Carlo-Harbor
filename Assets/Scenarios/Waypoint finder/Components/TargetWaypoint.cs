@@ -3,9 +3,8 @@ using Unity.Mathematics;
 using UnityEngine;
 
 [GenerateAuthoringComponent]
-public class TargetWaypointData : IComponentData
+public struct TargetWaypoint : IComponentData
 {
-    public bool WaypointSet = false;
-    public int WaypointNumber = -1;
+    public int WaypointNumber;
     public float3 Pos;
 }
