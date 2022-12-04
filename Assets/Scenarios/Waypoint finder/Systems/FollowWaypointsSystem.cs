@@ -4,6 +4,7 @@ using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Transforms;
+using UnityEngine;
 
 // Guy doing the same: https://forum.unity.com/threads/something-able-to-put-nativehashmap-or-nativelist-into-icomponentdata-or-send-to-job.628396/
 
@@ -33,24 +34,32 @@ public partial class FollowWaypointsSystem : SystemBase
         var ecb = _ecbSystem.CreateCommandBuffer().AsParallelWriter();       
 
         var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
-        /*
 
         // If the entity is not following a waypoint at the moment, check buffer to see if there are any available
         Entities
             .WithAll<FollowWaypointsTag>()
             .ForEach((Entity e, int entityInQueryIndex, in UniverseId uid) => {
 
-            Entity wpManager = _waypointManagerMap[uid.Value];
+            Debug.Log("Debugging!");
 
-            DynamicBuffer<WaypointBufferElement> wpBuffer = entityManager.GetBuffer<WaypointBufferElement>(wpManager);
 
-            Entity wp = wpBuffer[0].Waypoint;
-            float3 wpPos = entityManager.GetComponentData<Translation>(wp).Value;
+            if(_waypointManagerMap.ContainsKey(uid.Value)) {
+                Entity wpManager = _waypointManagerMap[uid.Value];
 
-            ecb.SetComponent(entityInQueryIndex, e, new TargetWaypoint { WaypointNumber = 0, Pos = wpPos });
-            
-            // Set the state to start following waypoints
-            ecb.AddComponent<FollowingWaypointsTag>(entityInQueryIndex, e);
+                DynamicBuffer<WaypointBufferElement> wpBuffer = entityManager.GetBuffer<WaypointBufferElement>(wpManager);
+
+                Entity wp = wpBuffer[0].Waypoint;
+                float3 wpPos = entityManager.GetComponentData<Translation>(wp).Value;
+
+                ecb.SetComponent(entityInQueryIndex, e, new TargetWaypoint { WaypointNumber = 0, Pos = wpPos });
+                
+                // Set the state to start following waypoints
+                ecb.RemoveComponent<FollowWaypointsTag>(entityInQueryIndex, e);
+                ecb.AddComponent<FollowingWaypointsTag>(entityInQueryIndex, e);
+
+                Debug.Log("Debugging!");
+
+            }
 
         }).WithoutBurst().Run();
 
@@ -72,10 +81,6 @@ public partial class FollowWaypointsSystem : SystemBase
                 translation.Value += movement;
             }
           
-
-
-            }).ScheduleParallel();
-    */
+        }).ScheduleParallel();
     }
-    
 }

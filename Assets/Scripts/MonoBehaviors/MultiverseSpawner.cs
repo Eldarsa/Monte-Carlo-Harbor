@@ -18,10 +18,16 @@ public class MultiverseSpawner : MonoBehaviour
     private float _universeWidth;
     private float _universeLength;
 
+    ConversionSystem gocs;
+
+    void OnCreate() {
+        gocs = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<ConversionSystem>(); // NOT USED!
+
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-
         // Get the universe configurations
         UniverseConfig config = universePrefab.GetComponent<UniverseConfig>();
         _universeWidth = config.universeWidth;
@@ -38,13 +44,20 @@ public class MultiverseSpawner : MonoBehaviour
         // Setup EntityManager and make an entity instance of our universe prefab
         blob = new BlobAssetStore();
         var settings = GameObjectConversionSettings.FromWorld(World.DefaultGameObjectInjectionWorld, blob);
+        
+        // Make sure that instatiating entities from this prefab makes them linked
+        //gocs.DeclareLinkedEntityGroup(universePrefab);
 
         // Gives us entity from a game object
         var entity = GameObjectConversionUtility.ConvertGameObjectHierarchy(universePrefab, settings);
 
+        //var entity = gocs.CreateAdditionalEntity(universePrefab);
+
         var universeCopy = Object.Instantiate(universePrefab);
         disableRendering(universeCopy);
         var invisibleEntity = GameObjectConversionUtility.ConvertGameObjectHierarchy(universeCopy, settings);
+
+        // To manage children https://forum.unity.com/threads/recursively-adding-disabled-component-inside-job.1026493/
 
         // We have to instantiate the entities through a manager
         var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;

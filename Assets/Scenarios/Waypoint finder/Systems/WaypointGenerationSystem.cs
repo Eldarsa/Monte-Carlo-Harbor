@@ -25,11 +25,11 @@ public partial class WaypointGenerationSystem : SystemBase
 
     protected override void OnUpdate()
     {
-        var ecb = _ecbSystem.CreateCommandBuffer().AsParallelWriter();       
+        var ecb1 = _ecbSystem.CreateCommandBuffer().AsParallelWriter();      
+        var ecb2 = _ecbSystem.CreateCommandBuffer().AsParallelWriter();   
 
         var wpm = WaypointManagerMap.AsParallelWriter(); 
         
-        // TODO: Give waypoint buffer so that we can see all the waypoints for this particular manager
         var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
 
         // Spawn Waypoint managers in every universe with an InitWaypointManagerTag 
@@ -39,28 +39,28 @@ public partial class WaypointGenerationSystem : SystemBase
                 
                 // The Entity here will be a Universe
 
-                Entity newWaypointManager = ecb.CreateEntity(entityInQueryIndex);
+                Entity newWaypointManager = ecb1.CreateEntity(entityInQueryIndex);
 
                 // Set up the waypoint manager to spawn waypoints
-                ecb.AddComponent<SpawnWaypointsTag>(entityInQueryIndex, newWaypointManager);
+                ecb1.AddComponent<SpawnWaypointsTag>(entityInQueryIndex, newWaypointManager);
 
                 // Pass all the components the waypointManager needs
-                ecb.AddComponent(entityInQueryIndex, newWaypointManager, new UniverseId { Value = id.Value});
-                ecb.AddComponent(entityInQueryIndex, newWaypointManager, new Translation { Value = translation.Value});
+                ecb1.AddComponent(entityInQueryIndex, newWaypointManager, new UniverseId { Value = id.Value});
+                ecb1.AddComponent(entityInQueryIndex, newWaypointManager, new Translation { Value = translation.Value});
 
                 // Add a dynamic buffer to store waypoints in such that the boat can find them
-                ecb.AddBuffer<WaypointBufferElement>(entityInQueryIndex, newWaypointManager);
+                ecb1.AddBuffer<WaypointBufferElement>(entityInQueryIndex, newWaypointManager);
 
                 // Pass the waypoint generation data from the parent entity to the new waypoint manager
                 var waypointGenerationData = entityManager.GetComponentData<WaypointGenerationData>(e);
-                ecb.AddComponent(entityInQueryIndex, newWaypointManager, waypointGenerationData);
+                ecb1.AddComponent(entityInQueryIndex, newWaypointManager, waypointGenerationData);
 
                 // Add it to a hashmap
                 wpm.TryAdd(id.Value, newWaypointManager);
                 //WaypointManagerMap.Add(id.Value, newWaypointManager);
 
                 // Remove this component to signal that operation is complete
-                ecb.RemoveComponent<InitWaypointManagerTag>(entityInQueryIndex, e);
+                ecb1.RemoveComponent<InitWaypointManagerTag>(entityInQueryIndex, e);
 
             }).Schedule(); //.WithoutBurst().Run(); //.Schedule(); //WithoutBurst().Run();
 
@@ -84,7 +84,7 @@ public partial class WaypointGenerationSystem : SystemBase
 
                 int counter = 0;
                 foreach(float3 wp in waypoints){
-                    var newWaypoint = ecb.Instantiate(entityInQueryIndex, data.WaypointPrefab);
+                    var newWaypoint = ecb2.Instantiate(entityInQueryIndex, data.WaypointPrefab);
 
                     var wpPos = new Translation { 
                         Value = wp + translation.Value
@@ -96,8 +96,8 @@ public partial class WaypointGenerationSystem : SystemBase
                         WaypointNumber = counter
                         };
 
-                    ecb.SetComponent(entityInQueryIndex, newWaypoint, wpPos);
-                    ecb.SetComponent(entityInQueryIndex, newWaypoint, wpData);
+                    ecb2.SetComponent(entityInQueryIndex, newWaypoint, wpPos);
+                    ecb2.SetComponent(entityInQueryIndex, newWaypoint, wpData);
 
                     // Add a reference to the waypoint in the WaypointManagers waypoint buffer
                     var wpBufferElement = new WaypointBufferElement() { Waypoint = newWaypoint };
@@ -108,9 +108,10 @@ public partial class WaypointGenerationSystem : SystemBase
                 }
 
                 // We have spawned waypoints now. Remove component..
-                ecb.RemoveComponent<SpawnWaypointsTag>(entityInQueryIndex, e);
+                ecb2.RemoveComponent<SpawnWaypointsTag>(entityInQueryIndex, e);
 
         }).WithoutBurst().Run();
+
         _ecbSystem.AddJobHandleForProducer(this.Dependency);
     
 

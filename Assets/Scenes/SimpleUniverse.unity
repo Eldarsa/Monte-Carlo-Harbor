@@ -504,16 +504,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1970527082152115246, guid: 424cf72e20e61994b9e6002535cb8a6b, type: 3}
       propertyPath: xGridSize
-      value: 1
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 1970527082152115246, guid: 424cf72e20e61994b9e6002535cb8a6b, type: 3}
       propertyPath: zGridSize
-      value: 1
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 1970527082152115246, guid: 424cf72e20e61994b9e6002535cb8a6b, type: 3}
       propertyPath: universePrefab
       value: 
-      objectReference: {fileID: 6902067033934463519, guid: bf79af3112e06e248815c95952b22295, type: 3}
+      objectReference: {fileID: 5852310578785164555, guid: 3270b9d0bd9398a43bb9d4a753a0eee9, type: 3}
     - target: {fileID: 1970527082152115246, guid: 424cf72e20e61994b9e6002535cb8a6b, type: 3}
       propertyPath: visibleUniverseCount
       value: 100
